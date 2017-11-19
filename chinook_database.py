@@ -24,7 +24,7 @@ conn, cur = get_connection_and_cursor()
 
 # All columns
 print('==> Get all columns of all tracks')
-cur.execute('...')
+cur.execute('select * from "Track"')
 results = cur.fetchall()
 print(results[0])
 print('--> Result Rows:', len(results))
@@ -41,7 +41,7 @@ def execute_and_print(query, numer_of_results=1):
 
 # Single column
 print('==> Get names of all tracks')
-# execute_and_print('select ... from ... ')
+execute_and_print('select "Name" from "Track"', 5)
 
 # Multiple columns
 print('==> Get Name, AlbumId of all tracks')
@@ -61,25 +61,25 @@ print('==> Get Name and AlbumId of all tracks with AlbumId 3, 5, and 7')
 
 # Multiple columns conditional like
 print('==> Get Name and AlbumId of all tracks if Name contains fast')
-# execute_and_print("""select "Name", "AlbumId" from "Track" where ... like ... """)
+execute_and_print("""select "Name", "AlbumId" from "Track" where "Name" like '%fast%' """)
 
 # VARIATION: Multiple columns conditional case insensitive like
 print('==> Get Name and AlbumId of all tracks if Name contains fast or Fast')
-# execute_and_print("""select "Name", "AlbumId" from "Track" where ... ilike ...""")
+execute_and_print("""select "Name", "AlbumId" from "Track" where "Name" ilike '%fast%' """)
 
 # PART 2
 # ------
 
 # get count of Tracks
 print('==> Get count of all tracks using *')
-# execute_and_print(""" select ... from "Track" """)
+execute_and_print(""" select count(*) from "Track" """)
 
 # VARIATION: Difference between count(*), count("TrackId"), count("Composer")
 print('==> Get count of all tracks using TrackId')
-# execute_and_print(""" select ... from "Track" """)
+execute_and_print(""" select count("TrackId") from "Track" """)
 
 print('==> Get count of all tracks using Composer')
-# execute_and_print(""" select ... from "Track" """)
+execute_and_print(""" select count("Composer") from "Track" """)
 
 # get count of Tracks conditional
 print('==> Get count of all tracks with AlbumId 3')
@@ -98,7 +98,7 @@ print('==> Get average playtime of all tracks with AlbumId 3')
 
 # GROUP BY
 print('==> Get average playtime of all tracks for each Album')
-# execute_and_print(""" select "AlbumId", ... from "Track" group by ... """)
+execute_and_print(""" select "AlbumId", avg("Milliseconds") from "Track" group by "AlbumId" """, 5)
 
 # ORDER BY
 print('==> Get average playtime of all tracks for each Album and order them by AlbumId')
@@ -117,11 +117,11 @@ print('==> Get Name, AlbumId of all tracks and sort them by AlbumId, and then by
 
 # INNER JOIN ON condition
 print('==> Get Name, AlbumTitle of all tracks')
-# execute_and_print("""select ...
-#     from ... INNER JOIN ... ON (...) """)
+execute_and_print("""select "Name", "Title" as "AlbumTitle"
+    from "Album" INNER JOIN "Track" ON ("Album"."AlbumId" = "Track"."AlbumId") """)
 
 # INNER JOIN ON condition with filter conditions
 print('==> Get Name, AlbumTitle of all tracks if Name contains fast or Fast')
-# execute_and_print("""select ...
-#     from ... INNER JOIN ... ON (...)
-#     where ... """, 5)
+execute_and_print("""select "Name", "Title" as "AlbumTitle"
+    from "Album" INNER JOIN "Track" ON ("Album"."AlbumId" = "Track"."AlbumId")
+    where "Name" ilike '%fast%' """, 5)
